@@ -2,8 +2,7 @@
 
 A Flutter 📦 package to create an interactive, Apple Watch-like bubble view for displaying contributors, team members, or any group of people. The layout is based on a hexagonal grid that dynamically scales and blurs based on the user's focus, providing a smooth and engaging user experience.
 
-[![Honeycomb People Video Preview](flutter_01.png)](screen.mp4)
-*Click the image above to watch the video*
+![Honeycomb People Preview](screen.gif)
 
 ## ✨ Features
 
