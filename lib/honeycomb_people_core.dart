@@ -7,6 +7,12 @@ import 'dart:ui' as ui;
 import 'dart:math';
 
 // ===== AYARLAMA PARAMETRELERİ (Tuning Parameters) =====
+/// Configuration class for the [ContributorsScreen] widget.
+///
+/// Use this class to customize the appearance and behavior of the honeycomb grid,
+/// such as bubble sizes, spacing, animation properties, and more. An instance
+/// of this class can be passed to the `config` parameter of the
+/// [ContributorsScreen] widget.
 class HoneycombConfig {
   // Bubble boyut ve görünüm ayarları
   final double baseBubbleSize; // Ana bubble boyutu
@@ -63,6 +69,7 @@ class HoneycombConfig {
 }
 
 // ===== VERİ MODELİ =====
+/// Represents a single contributor with their name, role, and an optional photo URL.
 class Contributor {
   final String name;
   final String role;
@@ -93,8 +100,7 @@ final List<Contributor> sampleContributors = [
   const Contributor(
       name: "Mehmet Özkan",
       role: "Senior Flutter Developer",
-      photoUrl:
-          "https://kivomobileproadmin.maptriks.com/ApplicationFiles/IconCatalog/B2EB007337A6AF2EE987F271D1699118.png"),
+      photoUrl: "https://picsum.photos/200/200?random=1"),
   const Contributor(
       name: "Ayşe Demir",
       role: "UI/UX Designer",
@@ -103,13 +109,11 @@ final List<Contributor> sampleContributors = [
   const Contributor(
       name: "Ali Yılmaz",
       role: "Backend Developer",
-      photoUrl:
-          "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=facearea&w=200&h=200"),
+      photoUrl: "https://picsum.photos/200/200?random=2"),
   const Contributor(
       name: "Fatma Çelik",
       role: "Product Owner",
-      photoUrl:
-          "https://fastly.picsum.photos/id/243/200/200.jpg?hmac=fW5ZwzzyTBy2t2MROp988oq12mZnKwN0coFLhZEE87s"),
+      photoUrl: "https://picsum.photos/200/200?random=3"),
   const Contributor(
       name: "Gökalp Köseoğlu",
       role: "Product Manager",
@@ -118,11 +122,11 @@ final List<Contributor> sampleContributors = [
   const Contributor(
       name: "Zehra Şahin",
       role: "QA Engineer",
-      photoUrl: "https://randomuser.me/api/portraits/women/15.jpg"),
+      photoUrl: "https://picsum.photos/200/200?random=4"),
   const Contributor(
       name: "Oğuz Türkmen",
       role: "Mobile Developer",
-      photoUrl: "https://randomuser.me/api/portraits/men/3.jpg"),
+      photoUrl: "https://picsum.photos/200/200?random=5"),
   const Contributor(
       name: "İrem Avcı",
       role: "Frontend Developer",
@@ -135,11 +139,11 @@ final List<Contributor> sampleContributors = [
   const Contributor(
       name: "Selin Koç",
       role: "Scrum Master",
-      photoUrl: "https://randomuser.me/api/portraits/women/52.jpg"),
+      photoUrl: "https://picsum.photos/200/200?random=7"),
   const Contributor(
       name: "Cem Öztürk",
       role: "Tech Lead",
-      photoUrl: "https://randomuser.me/api/portraits/men/72.jpg"),
+      photoUrl: "https://picsum.photos/200/200?random=8"),
   const Contributor(
       name: "Neslihan Aktaş",
       role: "Business Analyst",
@@ -148,16 +152,15 @@ final List<Contributor> sampleContributors = [
   const Contributor(
       name: "Murat Kaya",
       role: "Security Engineer",
-      photoUrl: "https://randomuser.me/api/portraits/men/32.jpg"),
+      photoUrl: "https://picsum.photos/200/200?random=9"),
   const Contributor(
       name: "Elif Doğan",
       role: "Marketing Manager",
-      photoUrl: "https://randomuser.me/api/portraits/women/41.jpg"),
+      photoUrl: "https://picsum.photos/200/200?random=10"),
   const Contributor(
       name: "Serkan Ünal",
       role: "Cloud Architect",
-      photoUrl:
-          "https://www.maptriks.com/wp-content/uploads/2022/07/maptriks-yonetici-ortak-fatih-kuralkan.jpg"),
+      photoUrl: "https://picsum.photos/200/200?random=11"),
   const Contributor(
       name: "Pınar Çakır",
       role: "Content Writer",
@@ -212,96 +215,89 @@ class _ContributorsScreenState extends State<ContributorsScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Honeycomb People'),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          // Ekran merkezi hesaplama
-          final center =
-              Offset(constraints.maxWidth / 2, constraints.maxHeight / 2);
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Ekran merkezi hesaplama
+        final center =
+            Offset(constraints.maxWidth / 2, constraints.maxHeight / 2);
 
-          // İlk kez odak noktasını merkeze ayarla
-          if (focusPoint.value == Offset.zero) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              focusPoint.value = center;
-            });
-          }
+        // İlk kez odak noktasını merkeze ayarla
+        if (focusPoint.value == Offset.zero) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            focusPoint.value = center;
+          });
+        }
 
-          // Grid pozisyonlarını hesapla
-          gridPositions = _generateHexGridPositions(center, constraints);
+        // Grid pozisyonlarını hesapla
+        gridPositions = _generateHexGridPositions(center, constraints);
 
-          return MouseRegion(
-            onHover: (event) {
-              // Web için mouse pozisyonunu takip et
-              focusPoint.value = event.localPosition;
+        return MouseRegion(
+          onHover: (event) {
+            // Web için mouse pozisyonunu takip et
+            focusPoint.value = event.localPosition;
+          },
+          child: GestureDetector(
+            onPanUpdate: (details) {
+              // Mobil için touch pozisyonunu takip et
+              focusPoint.value = details.localPosition;
             },
-            child: GestureDetector(
-              onPanUpdate: (details) {
-                // Mobil için touch pozisyonunu takip et
-                focusPoint.value = details.localPosition;
-              },
-              onTap: () {
-                // Boş alan tıklandığında focus'u merkeze döndür
-                focusPoint.value = center;
-              },
-              child: SizedBox.expand(
-                child: Stack(
-                  children: [
-                    // Arka plan
-                    Container(
-                      decoration: const BoxDecoration(
-                        gradient: RadialGradient(
-                          colors: [
-                            Color(0xFF1a1a2e),
-                            Color(0xFF16213e),
-                            Color(0xFF0f0f23),
-                          ],
-                        ),
+            onTap: () {
+              // Boş alan tıklandığında focus'u merkeze döndür
+              focusPoint.value = center;
+            },
+            child: SizedBox.expand(
+              child: Stack(
+                children: [
+                  // Arka plan
+                  Container(
+                    decoration: const BoxDecoration(
+                      gradient: RadialGradient(
+                        colors: [
+                          Color(0xFF1a1a2e),
+                          Color(0xFF16213e),
+                          Color(0xFF0f0f23),
+                        ],
                       ),
                     ),
+                  ),
 
-                    // Bubble'lar - z-order'a göre sıralanmış
-                    ValueListenableBuilder<int?>(
-                      valueListenable: hoveredIndex,
-                      builder: (context, hovered, child) {
-                        final bubbles = List.generate(
-                          min(widget.contributors.length, gridPositions.length),
-                          (index) => _BubbleData(
-                            contributor: widget.contributors[index],
-                            position: gridPositions[index],
-                            index: index,
-                          ),
-                        );
+                  // Bubble'lar - z-order'a göre sıralanmış
+                  ValueListenableBuilder<int?>(
+                    valueListenable: hoveredIndex,
+                    builder: (context, hovered, child) {
+                      final bubbles = List.generate(
+                        min(widget.contributors.length, gridPositions.length),
+                        (index) => _BubbleData(
+                          contributor: widget.contributors[index],
+                          position: gridPositions[index],
+                          index: index,
+                        ),
+                      );
 
-                        // Z-order'a göre sırala: hover olan en sonda (en üstte)
-                        bubbles.sort((a, b) {
-                          if (hovered == a.index) return 1; // a en sonda
-                          if (hovered == b.index) return -1; // b en sonda
-                          return 0; // diğerleri aynı sırada
-                        });
+                      // Z-order'a göre sırala: hover olan en sonda (en üstte)
+                      bubbles.sort((a, b) {
+                        if (hovered == a.index) return 1; // a en sonda
+                        if (hovered == b.index) return -1; // b en sonda
+                        return 0; // diğerleri aynı sırada
+                      });
 
-                        return Stack(
-                          children: bubbles
-                              .map((bubbleData) => _buildBubble(
-                                    contributor: bubbleData.contributor,
-                                    position: bubbleData.position,
-                                    index: bubbleData.index,
-                                  ))
-                              .toList(),
-                        );
-                      },
-                    ),
-                  ],
-                ),
+                      return Stack(
+                        children: bubbles
+                            .map((bubbleData) => _buildBubble(
+                                  contributor: bubbleData.contributor,
+                                  position: bubbleData.position,
+                                  index: bubbleData.index,
+                                ))
+                            .toList(),
+                      );
+                    },
+                  ),
+                ],
               ),
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 
