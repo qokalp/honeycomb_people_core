@@ -1,8 +1,8 @@
 name: honeycomb_people_core
 description: A Flutter package to create an interactive, Apple Watch-like bubble view for displaying a grid of contributors or team members.
 version: 0.0.1
-homepage: # TODO: Buraya GitHub reponuzun linkini yapıştırın
-repository: # TODO: Buraya GitHub reponuzun linkini yapıştırın
+homepage: https://github.com/qokalp/honeycomb_people_core
+repository: https://github.com/qokalp/honeycomb_people_core
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
